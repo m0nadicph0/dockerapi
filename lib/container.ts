@@ -30,12 +30,25 @@ export class Container {
       new URLSearchParams({ "name": containerName }),
     );
 
-    if (res.status != 201) {
-      throw new Error(`error creating container. Status=${res.status}`);
+    switch (res.status.valueOf()) {
+      case 201: {
+        const container = new Container(this.client);
+        const responseBody = await JSON.parse(res.body) as CreateContainerResponse;
+        container.id = responseBody.Id!;
+        return container;
+      }
+      case 400:
+        throw new Error("Bad parameter");
+      case 404:
+        throw new Error("No such image");
+      case 409:
+        throw new Error("Conflict");
+      case 500:
+        throw new Error("Server error");
+      default:
+        throw new Error(`Unexpected status code: ${res.status}`);
     }
-    const responseBody = await JSON.parse(res.body) as CreateContainerResponse;
-    this.id = responseBody.Id!;
-    return this;
+
   }
 
   async start(detachKeys: string = "") {
@@ -49,8 +62,18 @@ export class Container {
       new URLSearchParams({ "detachKeys": detachKeys }),
     );
 
-    if (res.status != 204) {
-      throw new Error(`error starting container. Status=${res.status}`);
+
+    switch (res.status.valueOf()) {
+      case 204:
+        return;
+      case 304:
+        throw new Error("Container already started");
+      case 404:
+        throw new Error("No such container");
+      case 500:
+        throw new Error("Server error");
+      default:
+        throw new Error(`Unexpected status code: ${res.status}`);
     }
   }
 
