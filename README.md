@@ -1,6 +1,6 @@
 # dockerapi
 
-`dockerapi` is a Deno client library for interacting with Docker. It provides a convenient way to manage Docker containers, images, networks, volumes, and system operations programmatically. The entry point to the library is the `mod.ts` file located at the root of the project.
+`dockerapi` is a Deno client library for interacting with Docker. It provides a convenient way to manage Docker containers, images, networks, volumes, and system operations programmatically.
 
 ## Table of Contents
 
