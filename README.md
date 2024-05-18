@@ -1,6 +1,8 @@
 # dockerapi
 
-`dockerapi` is a Deno client library for interacting with Docker. It provides a convenient way to manage Docker containers, images, networks, volumes, and system operations programmatically.
+`dockerapi` is a Deno client library for interacting with Docker. It provides a
+convenient way to manage Docker containers, images, networks, volumes, and
+system operations programmatically.
 
 ## Table of Contents
 
@@ -17,10 +19,11 @@
 
 ## Installation
 
-To use `dockerapi` in your Deno project, you can import it directly from the repository:
+To use `dockerapi` in your Deno project, you can import it directly from the
+repository:
 
 ```typescript
-import Docker from 'https://deno.land/x/dockerapi/mod.ts';
+import Docker from "https://deno.land/x/dockerapi/mod.ts";
 ```
 
 ## Usage
@@ -138,7 +141,7 @@ console.log(info);
 
 ```typescript
 const containers = await docker.containers.list();
-containers.forEach(c => console.log(c.id));
+containers.forEach((c) => console.log(c.id));
 ```
 
 #### Listing Container Processes
@@ -444,12 +447,15 @@ To run the tests for this library, use the following command:
 deno task test
 ```
 
-The tests will automatically create, start, stop, and remove containers, images, networks, and volumes to verify the functionality of the library.
+The tests will automatically create, start, stop, and remove containers, images,
+networks, and volumes to verify the functionality of the library.
 
 ## Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request to propose changes or additions.
+Contributions are welcome! Please open an issue or submit a pull request to
+propose changes or additions.
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file
+for details.

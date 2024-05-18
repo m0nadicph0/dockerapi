@@ -22,7 +22,6 @@ export class Container {
     this.client = client;
   }
 
-
   /**
    * Creates a container with the specified container name and options.
    *
@@ -51,7 +50,9 @@ export class Container {
     switch (res.status.valueOf()) {
       case 201: {
         const container = new Container(this.client);
-        const responseBody = await JSON.parse(res.body) as CreateContainerResponse;
+        const responseBody = await JSON.parse(
+          res.body,
+        ) as CreateContainerResponse;
         container.id = responseBody.Id!;
         return container;
       }
@@ -66,7 +67,6 @@ export class Container {
       default:
         throw new Error(`Unexpected status code: ${res.status}`);
     }
-
   }
 
   /**
@@ -92,7 +92,6 @@ export class Container {
       JSON.stringify({}),
       new URLSearchParams({ "detachKeys": detachKeys }),
     );
-
 
     switch (res.status.valueOf()) {
       case 204:
