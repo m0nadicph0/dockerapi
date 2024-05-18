@@ -7,6 +7,9 @@ import {
   VolumeList,
 } from "./types/volume.ts";
 
+/**
+ * Represents a Docker Volume.
+ */
 export class Volume {
   client: DockerClient;
   name?: string;
@@ -15,6 +18,12 @@ export class Volume {
     this.client = client;
   }
 
+  /**
+   * Creates a volume with the given options.
+   * @param {CreateVolumeRequest} opt - The options used to create the volume.
+   * @returns {Promise<Volume>} A promise that resolves with the created volume.
+   * @throws {Error} If the server returns a status code 500.
+   */
   async create(opt: CreateVolumeRequest): Promise<Volume> {
     const res = await this.client.request(
       "POST",
@@ -37,6 +46,14 @@ export class Volume {
     }
   }
 
+  /**
+   * Instruct the driver to remove the volume.
+   * @param {boolean} [force] - Optional. If true, forces removal of the volume even if it is in use.
+   * @returns {Promise<void>} - Promise that resolves when the volume is successfully removed.
+   * @throws {Error} - Throws an error if no such volume or volume driver exists.
+   * @throws {Error} - Throws an error if the volume is in use and cannot be removed.
+   * @throws {Error} - Throws an error if the server returned 500 status code.
+   */
   async rm(force?: boolean): Promise<void> {
     if (this.name === null) {
       throw new Error("Volume not created");
@@ -65,6 +82,12 @@ export class Volume {
     }
   }
 
+  /**
+   * Returns information about the volume.
+   *
+   * @returns {Promise<VolumeInfo>} A promise that resolves with the volume information.
+   * @throws {Error} If the volume or volume driver does not exist, or if there is a server error.
+   */
   async inspect(): Promise<VolumeInfo> {
     const res = await this.client.request(
       "GET",
@@ -85,6 +108,14 @@ export class Volume {
     }
   }
 
+  /**
+   * Retrieves a list of volumes.
+   *
+   * @async
+   * @function list
+   * @returns {Promise<VolumeList>} - A promise that resolves with the list of volumes.
+   * @throws {Error} - If the server responds with a 500 error or an unexpected status code.
+   */
   async list(): Promise<VolumeList> {
     const res = await this.client.request(
       "GET",
@@ -103,6 +134,12 @@ export class Volume {
     }
   }
 
+  /**
+   * Prunes unused volumes.
+   *
+   * @returns {Promise<PruneVolumesResponse>} A promise that resolves with a PruneVolumesResponse object.
+   * @throws {Error} If a server error occurs or an unexpected status code is returned.
+   */
   async prune(): Promise<PruneVolumesResponse> {
     const res = await this.client.request(
       "POST",
