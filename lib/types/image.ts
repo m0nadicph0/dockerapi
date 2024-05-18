@@ -43,7 +43,7 @@ interface ContainerConfig {
   AttachStdin: boolean;
   AttachStdout: boolean;
   AttachStderr: boolean;
-  ExposedPorts: { [key: string]: {} };
+  ExposedPorts: { [key: string]: Record<string | number | symbol, never> };
   Tty: boolean;
   OpenStdin: boolean;
   StdinOnce: boolean;
@@ -52,7 +52,7 @@ interface ContainerConfig {
   Healthcheck: Healthcheck;
   ArgsEscaped: boolean;
   Image: string;
-  Volumes: { [key: string]: {} };
+  Volumes: { [key: string]: Record<string | number | symbol, never> };
   WorkingDir: string;
   Entrypoint: any[];
   NetworkDisabled: boolean;

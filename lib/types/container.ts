@@ -58,7 +58,7 @@ export interface ContainerInfo {
     Tty: boolean;
     User: string;
     Volumes: {
-      [key: string]: {};
+      [key: string]: Record<string | number | symbol, never>;
     };
     WorkingDir: string;
     StopSignal: string;
@@ -71,11 +71,11 @@ export interface ContainerInfo {
     MaximumIOps: number;
     MaximumIOBps: number;
     BlkioWeight: number;
-    BlkioWeightDevice: {}[];
-    BlkioDeviceReadBps: {}[];
-    BlkioDeviceWriteBps: {}[];
-    BlkioDeviceReadIOps: {}[];
-    BlkioDeviceWriteIOps: {}[];
+    BlkioWeightDevice: Record<string | number | symbol, never>[];
+    BlkioDeviceReadBps: Record<string | number | symbol, never>[];
+    BlkioDeviceWriteBps: Record<string | number | symbol, never>[];
+    BlkioDeviceReadIOps: Record<string | number | symbol, never>[];
+    BlkioDeviceWriteIOps: Record<string | number | symbol, never>[];
     ContainerIDFile: string;
     CpusetCpus: string;
     CpusetMems: string;
@@ -103,7 +103,7 @@ export interface ContainerInfo {
     OomScoreAdj: number;
     NetworkMode: string;
     PidMode: string;
-    PortBindings: {};
+    PortBindings: Record<string | number | symbol, never>;
     Privileged: boolean;
     ReadonlyRootfs: boolean;
     PublishAllPorts: boolean;
@@ -117,7 +117,7 @@ export interface ContainerInfo {
     Sysctls: {
       [key: string]: string;
     };
-    Ulimits: {}[];
+    Ulimits: Record<string | number | symbol, never>[];
     VolumeDriver: string;
     ShmSize: number;
   };
