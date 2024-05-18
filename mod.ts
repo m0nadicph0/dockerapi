@@ -5,6 +5,14 @@ import { Network } from "./lib/network.ts";
 import { System } from "./lib/system.ts";
 import { Volume } from "./lib/volume.ts";
 
+/**
+ * The Docker class represents a Docker client and provides methods to interact with Docker containers,
+ * images, networks, volumes, and the system.
+ *
+ * @class
+ * @constructor
+ * @param {string} path - The path to the Docker socket file.
+ */
 export class Docker {
   containers: Container;
   images: Image;
