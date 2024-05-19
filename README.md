@@ -23,7 +23,7 @@ To use `dockerapi` in your Deno project, you can import it directly from the
 repository:
 
 ```typescript
-import {Docker} from "https://deno.land/x/dockerapi/mod.ts";
+import { Docker } from "https://deno.land/x/dockerapi/mod.ts";
 ```
 
 ## Usage
