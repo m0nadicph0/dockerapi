@@ -237,3 +237,16 @@ Deno.test("test get container stats based on resource usage", async () => {
   assertNotEquals(stats.cpu_stats.cpu_usage.percpu_usage, null);
   await container.rm();
 });
+
+Deno.test("test get container logs", async () => {
+  const container = await docker.containers.create(cname("logs"), {
+    Image: "ubuntu",
+    Cmd: ["echo", "Hello, World!"],
+    StopTimeout: 10,
+  });
+
+  await container.start();
+  const logs = await container.logs();
+  assertEquals(logs.includes("Hello"), true);
+  await container.rm();
+});

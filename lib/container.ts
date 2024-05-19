@@ -546,4 +546,62 @@ export class Container {
         throw new Error(`Unexpected status code: ${res.status}`);
     }
   }
+
+  /**
+   * Retrieves the logs of a container.
+   *
+   * @param {boolean} [follow=false] - Whether to stream the logs or not.
+   * @param {boolean} [stdout=true] - Whether to include stdout logs or not.
+   * @param {boolean} [stderr=false] - Whether to include stderr logs or not.
+   * @param {number} [since=0] - Timestamp in seconds to filter logs since a certain time.
+   * @param {string} [tail="all"] - Number of lines to show from the end of the logs.
+   * @param {number} [until=0] - Timestamp in seconds to filter logs until a certain time.
+   * @param {boolean} [timestamp=false] - Whether to include timestamps in the log lines or not.
+   *
+   * @returns {Promise<string>} - The logs of the container.
+   *
+   * @throws {Error} - If the container is not created.
+   * @throws {Error} - If the container with the given id does not exist.
+   * @throws {Error} - If there is a server error.
+   * @throws {Error} - If an unexpected HTTP status code is received.
+   */
+  async logs(
+    follow: boolean = false,
+    stdout: boolean = true,
+    stderr: boolean = false,
+    since: number = 0,
+    tail: string = "all",
+    until: number = 0,
+    timestamp: boolean = false,
+  ): Promise<string> {
+    if (this.id == null) {
+      throw new Error("Container not created.");
+    }
+
+    const res = await this.client.request(
+      "GET",
+      `/containers/${this.id}/logs`,
+      "",
+      new URLSearchParams({
+        "follow": follow.toString(),
+        "stdout": stdout.toString(),
+        "stderr": stderr.toString(),
+        "since": since.toString(),
+        "tail": tail,
+        "until": until.toString(),
+        "timestamps": timestamp.toString(),
+      }),
+    );
+
+    switch (res.status.valueOf()) {
+      case 200:
+        return res.body;
+      case 404:
+        throw new Error("no such container");
+      case 500:
+        throw new Error("server error");
+      default:
+        throw new Error(`Unexpected status code: ${res.status}`);
+    }
+  }
 }
