@@ -607,6 +607,16 @@ export class Container {
         }
     }
 
+    /**
+     * Executes a command inside a container.
+     *
+     * @param {CreateExecRequest} options - The options for executing the command.
+     * @returns {Promise<Exec>} - A promise that resolves to the executed command.
+     * @throws {Error} - If the container is not created
+     * @throws {Error} - If the container is paused
+     * @throws {Error} - If the server responds with 500 status code.
+     * @throws {Error} - If an unexpected status code is returned.
+     */
     async exec(options: CreateExecRequest):Promise<Exec> {
         if (this.id == null) {
             throw new Error("Container not created.");
