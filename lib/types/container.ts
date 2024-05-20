@@ -352,3 +352,17 @@ export interface ContainerStats {
     };
   };
 }
+
+export interface CreateExecRequest {
+  AttachStdin: boolean;
+  AttachStdout: boolean;
+  AttachStderr: boolean;
+  DetachKeys: string;
+  Tty: boolean;
+  Cmd: string[];
+  Env: string[];
+}
+
+export interface CreateExecResponse {
+  Id: string;
+}

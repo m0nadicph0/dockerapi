@@ -7,6 +7,7 @@ import {
   assertEquals,
   assertNotEquals,
 } from "std/assert/mod.ts";
+import { Exec } from "../lib/exec.ts";
 
 const docker = new Docker("/var/run/docker.sock");
 
@@ -248,5 +249,81 @@ Deno.test("test get container logs", async () => {
   await container.start();
   const logs = await container.logs();
   assertEquals(logs.includes("Hello"), true);
+  await container.rm();
+});
+
+
+
+Deno.test("test create an exec instance", async () => {
+  const container = await docker.containers.create(cname("exec"), {
+    Image: "ubuntu",
+    Cmd: ["sleep", "500"],
+    StopTimeout: 10,
+  });
+
+  await container.start();
+
+  const exec = await container.exec({
+    Cmd: ["echo", "Hello, World!"],
+    AttachStdin: false,
+    AttachStdout: false,
+    AttachStderr: false,
+    DetachKeys: "",
+    Tty: false,
+    Env: []
+  });
+  assertNotEquals(exec.id, null);
+  await container.kill();
+  await container.rm();
+});
+
+Deno.test("test start an exec instance", async () => {
+  const container = await docker.containers.create(cname("start-exec"), {
+    Image: "ubuntu",
+    Cmd: ["sleep", "500"],
+    StopTimeout: 10,
+  });
+
+  await container.start();
+
+  const exec = await container.exec({
+    Cmd: ["echo", "Hello, World!"],
+    AttachStdin: false,
+    AttachStdout: false,
+    AttachStderr: false,
+    DetachKeys: "",
+    Tty: false,
+    Env: []
+  });
+  assertNotEquals(exec.id, null);
+  await exec.start({});
+  await container.kill();
+  await container.rm();
+});
+
+Deno.test("test inspect an exec instance", async () => {
+  const container = await docker.containers.create(cname("inspect-exec"), {
+    Image: "ubuntu",
+    Cmd: ["sleep", "500"],
+    StopTimeout: 10,
+  });
+
+  await container.start();
+
+  const exec = await container.exec({
+    Cmd: ["echo", "Hello, World!"],
+    AttachStdin: false,
+    AttachStdout: false,
+    AttachStderr: false,
+    DetachKeys: "",
+    Tty: false,
+    Env: []
+  });
+  assertNotEquals(exec.id, null);
+  await exec.start({});
+  const execInfo = await exec.inspect();
+  assertNotEquals(execInfo, null);
+  assertEquals(execInfo.ContainerID, container.id);
+  await container.kill();
   await container.rm();
 });
