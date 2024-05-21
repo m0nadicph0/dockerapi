@@ -3,11 +3,12 @@ import { Docker } from "../mod.ts";
 import { cname } from "./helper.ts";
 import { Kind } from "../lib/types/container.ts";
 import {
+assert,
   assertArrayIncludes,
   assertEquals,
   assertNotEquals,
 } from "std/assert/mod.ts";
-import { Exec } from "../lib/exec.ts";
+
 
 const docker = new Docker("/var/run/docker.sock");
 
@@ -327,3 +328,39 @@ Deno.test("test inspect an exec instance", async () => {
   await container.kill();
   await container.rm();
 });
+
+Deno.test("test export a container", async () => {
+  const container = await docker.containers.create(cname("export"), {
+    Image: "alpine",
+    Cmd: ["true"],
+    StopTimeout: 10,
+  });
+  assertNotEquals(container.id, null);
+  const tarStream = await container.export();
+  assertNotEquals(tarStream, null);
+  await Deno.mkdir("temp");
+  await Deno.writeFile("temp/alpine.tar", tarStream);
+  const fileInfo = await Deno.lstat("temp/alpine.tar")
+  assert(fileInfo.isFile);
+  await Deno.remove("temp/alpine.tar");
+  await Deno.remove("temp");
+  await container.rm();
+});
+
+
+Deno.test("test export a container as a file", async () => {
+  const container = await docker.containers.create(cname("export"), {
+    Image: "alpine",
+    Cmd: ["true"],
+    StopTimeout: 10,
+  });
+  assertNotEquals(container.id, null);
+  await Deno.mkdir("temp");
+  await container.exportAsFile("temp/alpine.tar");
+  const fileInfo = await Deno.lstat("temp/alpine.tar")
+  assert(fileInfo.isFile);
+  await Deno.remove("temp/alpine.tar");
+  await Deno.remove("temp");
+  await container.rm();
+});
+

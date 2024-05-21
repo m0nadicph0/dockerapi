@@ -645,4 +645,33 @@ export class Container {
         }
     }
 
+    async export(): Promise<ReadableStream<Uint8Array>> {
+        if (this.id == null) {
+            throw new Error("Container not created");
+        }
+
+        const res = await this.client.request(
+            "GET",
+            `/containers/${this.id}/export`,
+            "",
+            new URLSearchParams({}),
+        );
+
+        switch (res.status.valueOf()) {
+            case 200:
+                return res.body!;
+            case 404:
+                throw new Error("no such container");
+            case 500:
+                throw new Error("server error");
+            default:
+                throw new Error(`Unexpected status code: ${res.status}`);
+        }
+    }
+
+    async exportAsFile(path: string): Promise<void> {
+        const tarStream = await this.export();
+        await Deno.writeFile(path, tarStream);
+    }
+
 }
