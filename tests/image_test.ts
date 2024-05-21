@@ -74,3 +74,13 @@ Deno.test("test export an image", async () => {
   await Deno.remove("temp/busybox-uclibc.tar");
   await Deno.remove("temp");
 });
+
+Deno.test("test export an image by name", async () => {
+  const tarStream = await docker.images.exportByName("busybox");
+  await Deno.mkdir("temp")
+  await Deno.writeFile("temp/busybox.tar", tarStream);
+  const fileInfo = await Deno.stat("temp/busybox.tar");
+  assert(fileInfo.isFile);
+  await Deno.remove("temp/busybox.tar");
+  await Deno.remove("temp");
+});

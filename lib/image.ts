@@ -272,12 +272,51 @@ export class Image {
     }
   }
 
+  /**
+   * Retrieves a tarball containing all images and metadata for a repository.
+   *
+   * @returns {Promise<ReadableStream<Uint8Array>>} A promise that resolves to a readable stream of Uint8Array.
+   * @throws {Error} If the image is not created.
+   * @throws {Error} If the image is not found (HTTP 404).
+   * @throws {Error} If there is a server error (HTTP 500).
+   * @throws {Error} If an unexpected status code is received.
+   */
   async export(): Promise<ReadableStream<Uint8Array>> {
+    if (this.id == null) {
+      throw new Error("Image not created");
+    }
     const res = await this.client.request(
       "GET",
       `/images/${this.id}/get`,
       "",
       new URLSearchParams(),
+    );
+    switch (res.status.valueOf()) {
+      case 200:
+        return res.body!;
+      case 404:
+        throw new Error("No such image");
+      case 500:
+        throw new Error("Server error");
+      default:
+        throw new Error(`Unexpected status code: ${res.status}`);
+    }
+  }
+
+  /**
+   * Retrieves a tarball containing all images and metadata for a repository by name.
+   *
+   * @param {string} name - The name of the image to download.
+   * @return {Promise<ReadableStream<Uint8Array>>} A Promise that resolves with a ReadableStream of image data.
+   * @throws {Error} If the image with the given name does not exist or if there is a server error.
+   * @throws {Error} If the HTTP response has an unexpected status code.
+   */
+  async exportByName(name: string): Promise<ReadableStream<Uint8Array>> {
+    const res = await this.client.request(
+        "GET",
+        `/images/${name}/get`,
+        "",
+        new URLSearchParams(),
     );
     switch (res.status.valueOf()) {
       case 200:

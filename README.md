@@ -214,6 +214,30 @@ const stats = await container.stats();
 console.log(stats.cpu_stats.cpu_usage.percpu_usage);
 ```
 
+#### Exporting a container
+
+```typescript
+const container = await docker.containers.create(cname("export"), {
+  Image: "alpine",
+  Cmd: ["true"],
+  StopTimeout: 10,
+});
+const tarStream = await container.export();
+await Deno.writeFile("temp/alpine.tar", tarStream);
+```
+
+#### Exporting a container as a file
+
+```typescript
+const container = await docker.containers.create(cname("export"), {
+  Image: "alpine",
+  Cmd: ["true"],
+  StopTimeout: 10,
+});
+
+await container.exportAsFile("temp/alpine.tar");
+```
+
 ### Images API
 
 #### Listing Images
@@ -278,6 +302,21 @@ const image = await docker.images.commit(container, {
 }, {});
 
 console.log(image.id);
+```
+
+#### Exporting an image
+
+```typescript
+const image = await docker.images.create("busybox", "uclibc");
+const tarStream = await image.export();
+await Deno.writeFile("temp/busybox-uclibc.tar", tarStream);
+```
+
+#### Exporting an image by name
+
+```typescript
+const tarStream = await docker.images.exportByName("busybox");
+await Deno.writeFile("temp/busybox.tar", tarStream);
 ```
 
 ### Networks API
