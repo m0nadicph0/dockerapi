@@ -645,6 +645,17 @@ export class Container {
         }
     }
 
+    /**
+     *
+     * Exports a container as a ReadableStream of Uint8Array.
+     *
+     * @throws {Error} - Throws an error if the container is not created.
+     * @throws {Error} - Throws an error if there is no such container.
+     * @throws {Error} - Throws an error if there is a server error.
+     * @throws {Error} - Throws an error if an unexpected status code is returned.
+     *
+     * @return {Promise<ReadableStream<Uint8Array>>} - Returns a Promise that resolves to a ReadableStream of Uint8Array.
+     */
     async export(): Promise<ReadableStream<Uint8Array>> {
         if (this.id == null) {
             throw new Error("Container not created");
@@ -669,6 +680,13 @@ export class Container {
         }
     }
 
+    /**
+     * Export the data as a file.
+     *
+     * @param {string} path - The path where the file should be saved.
+     *
+     * @return {Promise<void>} - A promise that resolves when the export is complete.
+     */
     async exportAsFile(path: string): Promise<void> {
         const tarStream = await this.export();
         await Deno.writeFile(path, tarStream);
