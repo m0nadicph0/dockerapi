@@ -27,7 +27,7 @@ export class System {
 
     switch (res.status.valueOf()) {
       case 200:
-        return JSON.parse(res.body) as SystemInformation;
+        return await res.json() as SystemInformation;
       case 500:
         throw new Error("Server error");
       default:
@@ -50,7 +50,7 @@ export class System {
 
     switch (res.status.valueOf()) {
       case 200:
-        return JSON.parse(res.body) as Version;
+        return await res.json() as Version;
       case 500:
         throw new Error("Server error");
       default:

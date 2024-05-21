@@ -52,7 +52,7 @@ export class Image {
 
     switch (res.status.valueOf()) {
       case 200: {
-        const responseData = await JSON.parse(res.body) as ImageListInfo[];
+        const responseData = await res.json() as ImageListInfo[];
         return responseData.map((info) => {
           const image = new Image(this.client);
           image.id = info.Id;
@@ -86,7 +86,7 @@ export class Image {
     );
     switch (res.status.valueOf()) {
       case 200:
-        return JSON.parse(res.body) as ImageInfo;
+        return await res.json() as ImageInfo;
       case 404:
         throw new Error("No such image");
       case 500:
@@ -149,7 +149,7 @@ export class Image {
     );
     switch (res.status.valueOf()) {
       case 200:
-        return JSON.parse(res.body) as ImageHistoryItem[];
+        return await res.json() as ImageHistoryItem[];
       case 404:
         throw new Error("No such image");
       case 500:
@@ -182,7 +182,7 @@ export class Image {
     );
     switch (res.status.valueOf()) {
       case 200:
-        return JSON.parse(res.body) as RmResult[];
+        return await res.json() as RmResult[];
       case 404:
         throw new Error("No such image");
       case 409:
@@ -220,7 +220,7 @@ export class Image {
     );
     switch (res.status.valueOf()) {
       case 200:
-        return JSON.parse(res.body) as SearchResultItem[];
+        return await res.json() as SearchResultItem[];
       case 500:
         throw new Error("Server error");
       default:
@@ -259,7 +259,7 @@ export class Image {
     switch (res.status.valueOf()) {
       case 201: {
         const image = new Image(this.client);
-        const respBody = await JSON.parse(res.body);
+        const respBody = await res.json();
         image.id = respBody.Id;
         return image;
       }

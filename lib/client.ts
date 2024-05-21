@@ -1,5 +1,6 @@
-import { HttpRequest, HttpResponse } from "./types/http.ts";
+import {HttpHeader, HttpRequest, HttpResponse} from "./types/http.ts";
 import {
+  createResponse,
   parseBody,
   parseHead,
   parseHeaders,
@@ -18,7 +19,7 @@ export class DockerClient {
     path: string,
     body: string,
     query: URLSearchParams,
-  ): Promise<HttpResponse> {
+  ): Promise<Response> {
     const conn = await Deno.connect({
       path: this.socketPath,
       transport: "unix",
@@ -34,12 +35,9 @@ export class DockerClient {
     const statusCode = await parseHead(conn);
     const headers = await parseHeaders(conn);
     const responseBody = await parseBody(conn, headers);
-    const response: HttpResponse = {
-      status: statusCode,
-      headers: headers,
-      body: responseBody,
-    };
+    const response = createResponse(statusCode, headers, responseBody);
     conn.close();
-    return response as HttpResponse;
+    return response;
   }
+
 }

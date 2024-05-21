@@ -69,7 +69,7 @@ export class Exec {
 
         switch (res.status.valueOf()) {
             case 200: {
-                return JSON.parse(res.body) as ExecInfo;
+                return await res.json() as ExecInfo;
             }
             case 404:
                 throw new Error("No such exec instance");

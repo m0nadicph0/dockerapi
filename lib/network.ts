@@ -44,7 +44,7 @@ export class Network {
 
     switch (res.status.valueOf()) {
       case 201: {
-        const payload: CreateNetworkResponse = JSON.parse(res.body);
+        const payload: CreateNetworkResponse = await res.json();
         const network = new Network(this.client);
         network.id = payload.Id;
         return network;
@@ -123,7 +123,7 @@ export class Network {
 
     switch (res.status.valueOf()) {
       case 200:
-        return JSON.parse(res.body) as NetworkInfo;
+        return await res.json() as NetworkInfo;
       case 404:
         throw new Error("No such network");
       case 500:
@@ -240,7 +240,7 @@ export class Network {
     );
     switch (res.status.valueOf()) {
       case 200:
-        return JSON.parse(res.body) as NetworkListItem[];
+        return await res.json() as NetworkListItem[];
       case 500:
         throw new Error("Server error");
       default:

@@ -34,7 +34,7 @@ export class Volume {
 
     switch (res.status.valueOf()) {
       case 201: {
-        const data = await JSON.parse(res.body) as CreateVolumeResponse;
+        const data = await res.json() as CreateVolumeResponse;
         const volume = new Volume(this.client);
         volume.name = data.Name;
         return volume;
@@ -98,7 +98,7 @@ export class Volume {
 
     switch (res.status.valueOf()) {
       case 200:
-        return await JSON.parse(res.body) as VolumeInfo;
+        return await res.json() as VolumeInfo;
       case 404:
         throw new Error("No such volume or volume driver");
       case 500:
@@ -126,7 +126,7 @@ export class Volume {
 
     switch (res.status.valueOf()) {
       case 200:
-        return await JSON.parse(res.body) as VolumeList;
+        return await res.json() as VolumeList;
       case 500:
         throw new Error("Server error");
       default:
@@ -150,7 +150,7 @@ export class Volume {
 
     switch (res.status.valueOf()) {
       case 200:
-        return JSON.parse(res.body) as PruneVolumesResponse;
+        return await res.json() as PruneVolumesResponse;
       case 500:
         throw new Error("Server error");
       default:

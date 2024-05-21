@@ -52,9 +52,7 @@ export class Container {
         switch (res.status.valueOf()) {
             case 201: {
                 const container = new Container(this.client);
-                const responseBody = await JSON.parse(
-                    res.body,
-                ) as CreateContainerResponse;
+                const responseBody = await res.json() as CreateContainerResponse;
                 container.id = responseBody.Id!;
                 return container;
             }
@@ -338,7 +336,7 @@ export class Container {
 
         switch (res.status.valueOf()) {
             case 200:
-                return await JSON.parse(res.body) as ContainerInfo;
+                return await res.json() as ContainerInfo;
             case 404:
                 throw new Error("no such container");
             case 500:
@@ -379,7 +377,7 @@ export class Container {
 
         switch (res.status.valueOf()) {
             case 200: {
-                const responseData = await JSON.parse(res.body) as ContainerListInfo[];
+                const responseData = await res.json() as ContainerListInfo[];
                 return responseData.map((info) => {
                     const container = new Container(this.client);
                     container.id = info.Id;
@@ -414,7 +412,7 @@ export class Container {
 
         switch (res.status.valueOf()) {
             case 200:
-                return await JSON.parse(res.body) as ProcessInfo;
+                return await res.json() as ProcessInfo;
             case 404:
                 throw new Error("no such container");
             case 500:
@@ -442,7 +440,7 @@ export class Container {
         );
         switch (res.status.valueOf()) {
             case 200:
-                return await JSON.parse(res.body) as FSChanges[];
+                return await res.json() as FSChanges[];
             case 404:
                 throw new Error("no such container");
             case 500:
@@ -505,7 +503,7 @@ export class Container {
 
         switch (res.status.valueOf()) {
             case 200:
-                return await JSON.parse(res.body) as WaitContainerResponse;
+                return await res.json() as WaitContainerResponse;
             case 400:
                 throw new Error("bad parameter");
             case 404:
@@ -539,7 +537,7 @@ export class Container {
 
         switch (res.status.valueOf()) {
             case 200:
-                return await JSON.parse(res.body) as ContainerStats;
+                return await res.json() as ContainerStats;
             case 404:
                 throw new Error("no such container");
             case 500:
@@ -597,7 +595,7 @@ export class Container {
 
         switch (res.status.valueOf()) {
             case 200:
-                return res.body;
+                return res.text();
             case 404:
                 throw new Error("no such container");
             case 500:
@@ -631,7 +629,7 @@ export class Container {
 
         switch (res.status.valueOf()) {
             case 201: {
-                const jsonResponse = await JSON.parse(res.body) as CreateExecResponse
+                const jsonResponse = await res.json() as CreateExecResponse
                 const exec = new Exec(this.client);
                 exec.id = jsonResponse.Id;
                 return exec;
