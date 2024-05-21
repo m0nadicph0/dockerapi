@@ -1,4 +1,7 @@
 import { assert } from "std/assert/assert.ts";
+import { Untar } from "std/archive/untar.ts";
+import { ensureFile } from "std/fs/ensure_file.ts";
+
 import { Docker } from "../mod.ts";
 
 import { cname } from "./helper.ts";
@@ -59,4 +62,15 @@ Deno.test("test create new image from a container", async () => {
 
   await container.rm();
   await image.rm();
+});
+
+Deno.test("test export an image", async () => {
+  const image = await docker.images.create("busybox", "uclibc");
+  const tarStream = await image.export();
+  await Deno.mkdir("temp")
+  await Deno.writeFile("temp/busybox-uclibc.tar", tarStream);
+  const fileInfo = await Deno.stat("temp/busybox-uclibc.tar");
+  assert(fileInfo.isFile);
+  await Deno.remove("temp/busybox-uclibc.tar");
+  await Deno.remove("temp");
 });

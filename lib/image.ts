@@ -271,4 +271,23 @@ export class Image {
         throw new Error(`Unexpected status code: ${res.status}`);
     }
   }
+
+  async export(): Promise<ReadableStream<Uint8Array>> {
+    const res = await this.client.request(
+      "GET",
+      `/images/${this.id}/get`,
+      "",
+      new URLSearchParams(),
+    );
+    switch (res.status.valueOf()) {
+      case 200:
+        return res.body!;
+      case 404:
+        throw new Error("No such image");
+      case 500:
+        throw new Error("Server error");
+      default:
+        throw new Error(`Unexpected status code: ${res.status}`);
+    }
+  }
 }
